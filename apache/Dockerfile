@@ -1,8 +1,5 @@
 FROM httpd:2.4
 
-MAINTAINER Alexandre Jardin <info@ajardin.fr>
-LABEL maintainer="Alexandre Jardin <info@ajardin.fr>"
-
 # Install Apache requirements
 RUN \
     apt-get update -qq && \

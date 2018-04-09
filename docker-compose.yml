@@ -7,9 +7,9 @@ services:
     depends_on:
       - php
     ports:
-      - 443:443
+      - 80:80
     volumes:
-      - ~/www:/var/www/html:rw,delegated
+      - /Users/cassiop/Projects/mimodelo:/var/www/html:rw,delegated
     tty: true
 
   blackfire:
@@ -40,7 +40,7 @@ services:
     image: mysql:latest
     env_file: docker-env
     ports:
-      - 3306:3306
+      - 3307:3306
     volumes:
       - mysql:/var/lib/mysql
     tty: true
@@ -49,7 +49,7 @@ services:
     build: php
     env_file: docker-env
     volumes:
-      - ~/www:/var/www/html:rw,delegated
+      - /Users/cassiop/Projects/mimodelo:/var/www/html:rw,delegated
     tty: true
 
   redis:

@@ -1,8 +1,5 @@
 FROM php:5.6-fpm
 
-MAINTAINER Alexandre Jardin <info@ajardin.fr>
-LABEL maintainer="Alexandre Jardin <info@ajardin.fr>"
-
 # Install Magento requirements
 RUN \
     apt-get update -qq && \
