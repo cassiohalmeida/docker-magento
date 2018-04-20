@@ -35,11 +35,11 @@ RUN \
     perl -pi -e "s|;pm.status_path = /status|pm.status_path = /php_fpm_status|g" /usr/local/etc/php-fpm.d/www.conf
 
 # Install Blackfire extension
-RUN \
-    version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") && \
-    curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/"${version}" && \
-    tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp && \
-    mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so
+# RUN \
+#     version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") && \
+#     curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/"${version}" && \
+#     tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp && \
+#     mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so
 
 # Install Composer globally
 RUN \
@@ -64,8 +64,14 @@ RUN \
 # Install custom PHP configuration
 COPY conf/* /usr/local/etc/php/
 
+# Install xdebug
+# For PHP 5, the last xdebug supported version is 2.5.5
+# See https://xdebug.org/download.php
+# See http://pecl.php.net/package/Xdebug
+RUN yes "" | pecl install xdebug-2.5.5
+
 # Install custom entrypoint
-COPY entrypoint.sh /usr/local/bin/docker-custom-entrypoint
-RUN chmod 777 /usr/local/bin/docker-custom-entrypoint
-CMD ["php-fpm"]
-ENTRYPOINT ["docker-custom-entrypoint"]
+# COPY entrypoint.sh /usr/local/bin/docker-custom-entrypoint
+# RUN chmod 777 /usr/local/bin/docker-custom-entrypoint
+# CMD ["php-fpm"]
+# ENTRYPOINT ["docker-custom-entrypoint"]

@@ -9,15 +9,8 @@ services:
     ports:
       - 80:80
     volumes:
-      - /Users/cassiop/Projects/mimodelo:/var/www/html:rw,delegated
+      - ./repo:/var/www/html:rw,delegated
     tty: true
-
-  blackfire:
-    image: blackfire/blackfire:latest
-    env_file: docker-env
-    depends_on:
-      - apache
-      - php
 
   maildev:
     image: djfarrelly/maildev:latest
@@ -27,36 +20,42 @@ services:
     ports:
       - 1080:80
 
-  mongo:
-    image: mongo:latest
-    env_file: docker-env
-    ports:
-      - 27017:27017
-    volumes:
-      - mongo:/data/db
-    tty: true
-
   mysql:
-    image: mysql:latest
+    image: mysql:5
     env_file: docker-env
     ports:
       - 3307:3306
     volumes:
-      - mysql:/var/lib/mysql
+      - ./database:/var/lib/mysql
     tty: true
 
   php:
     build: php
     env_file: docker-env
     volumes:
-      - /Users/cassiop/Projects/mimodelo:/var/www/html:rw,delegated
+      - ./repo:/var/www/html:rw,delegated
+      - ./php/n98-magerun.phar:/usr/bin/mage
+      - ./php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     tty: true
 
-  redis:
-    image: redis:latest
-    env_file: docker-env
-    tty: true
+#  redis:
+#    image: redis:latest
+#    env_file: docker-env
+#    tty: true
 
-volumes:
-  mongo: {}
-  mysql: {}
+#  blackfire:
+#    image: blackfire/blackfire:latest
+#    env_file: docker-env
+#    depends_on:
+#      - apache
+#      - php
+
+#  mongo:
+#    image: mongo:latest
+#    env_file: docker-env
+#    ports:
+#      - 27017:27017
+#    volumes:
+#      - mongo:/data/db
+#    tty: true
+
