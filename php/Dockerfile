@@ -4,42 +4,36 @@ FROM php:5.6-fpm
 RUN \
     apt-get update -qq && \
     apt-get install -y -qq --no-install-recommends \
-        autoconf \
-        git \
-        jq \
-        libicu-dev \
-        libfreetype6-dev \
-        libjpeg-dev \
-        libmcrypt-dev \
-        libpng-dev \
-        libssl-dev \
-        libxml2-dev \
-        libxml2-utils \
-        mailutils \
-        ssh-client \
-        ssmtp && \
+    wget \
+    autoconf \
+    git \
+    jq \
+    libicu-dev \
+    libfreetype6-dev \
+    libjpeg-dev \
+    libmcrypt-dev \
+    libpng-dev \
+    libssl-dev \
+    libxml2-dev \
+    libxml2-utils \
+    mailutils \
+    ssh-client \
+    ssmtp && \
     docker-php-ext-install -j$(nproc) \
-        bcmath \
-        gd \
-        hash \
-        intl \
-        mcrypt \
-        opcache \
-        pdo_mysql \
-        soap \
-        zip && \
+    bcmath \
+    gd \
+    hash \
+    intl \
+    mcrypt \
+    opcache \
+    pdo_mysql \
+    soap \
+    zip && \
     yes "" | pecl install apcu-4.0.11 lzf mongo redis && \
     docker-php-ext-enable apcu lzf mongo redis && \
     rm -rf /var/lib/apt/lists/* && \
     perl -pi -e "s/mailhub=mail/mailhub=maildev/" /etc/ssmtp/ssmtp.conf && \
     perl -pi -e "s|;pm.status_path = /status|pm.status_path = /php_fpm_status|g" /usr/local/etc/php-fpm.d/www.conf
-
-# Install Blackfire extension
-# RUN \
-#     version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") && \
-#     curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/"${version}" && \
-#     tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp && \
-#     mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so
 
 # Install Composer globally
 RUN \
@@ -63,6 +57,7 @@ RUN \
 
 # Install custom PHP configuration
 COPY conf/* /usr/local/etc/php/
+COPY conf/xdebug.ini /usr/local/etc/php/conf.d/
 
 # Install xdebug
 # For PHP 5, the last xdebug supported version is 2.5.5
@@ -70,8 +65,6 @@ COPY conf/* /usr/local/etc/php/
 # See http://pecl.php.net/package/Xdebug
 RUN yes "" | pecl install xdebug-2.5.5
 
-# Install custom entrypoint
-# COPY entrypoint.sh /usr/local/bin/docker-custom-entrypoint
-# RUN chmod 777 /usr/local/bin/docker-custom-entrypoint
-# CMD ["php-fpm"]
-# ENTRYPOINT ["docker-custom-entrypoint"]
+# Install N98 Mage Run
+RUN curl -sL https://files.magerun.net/n98-magerun.phar -o n98-magerun.phar && chmod +x n98-magerun.phar && mv n98-magerun.phar /usr/local/bin/
+

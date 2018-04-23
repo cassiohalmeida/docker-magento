@@ -3,59 +3,35 @@ version: "3"
 services:
   apache:
     build: apache
-    env_file: docker-env
+    env_file: .env
     depends_on:
       - php
     ports:
-      - 80:80
+      - ${APACHE_PORT}:80
     volumes:
-      - ./repo:/var/www/html:rw,delegated
+      - ${PROJECT_ROOT}:/var/www/html:rw,delegated
     tty: true
 
   maildev:
     image: djfarrelly/maildev:latest
-    env_file: docker-env
+    env_file: .env
     depends_on:
       - apache
     ports:
-      - 1080:80
+      - ${MAILDEV_PORT}:80
 
   mysql:
     image: mysql:5
-    env_file: docker-env
+    env_file: .env
     ports:
-      - 3307:3306
+      - ${MYSQL_PORT}:3306
     volumes:
       - ./database:/var/lib/mysql
     tty: true
 
   php:
     build: php
-    env_file: docker-env
+    env_file: .env
     volumes:
-      - ./repo:/var/www/html:rw,delegated
-      - ./php/n98-magerun.phar:/usr/bin/mage
-      - ./php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ${PROJECT_ROOT}:/var/www/html:rw,delegated
     tty: true
-
-#  redis:
-#    image: redis:latest
-#    env_file: docker-env
-#    tty: true
-
-#  blackfire:
-#    image: blackfire/blackfire:latest
-#    env_file: docker-env
-#    depends_on:
-#      - apache
-#      - php
-
-#  mongo:
-#    image: mongo:latest
-#    env_file: docker-env
-#    ports:
-#      - 27017:27017
-#    volumes:
-#      - mongo:/data/db
-#    tty: true
-

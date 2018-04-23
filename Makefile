@@ -11,16 +11,23 @@ build: ## Build the environment
 	$(DOCKER_COMPOSE) pull --parallel --ignore-pull-failures
 	$(DOCKER_COMPOSE) build --pull
 
-env: ## Configure the environment variables
-	@if [[ ! -f docker-env ]]; then \
-		cp docker-env.dist docker-env; \
+## Configure the environment variables
+env: createenv createdatabase
+
+createenv:
+	@if [[ ! -f .env ]]; then \
+		cp .env.dist .env; \
 	fi
-	nano docker-env
+
+createdatabase:
+	@if [[ ! -d database ]]; then \
+		mkdir database; \
+	fi
 
 start: ## Start the environment
-	@if [[ ! -f docker-env ]]; then \
-		echo 'The default configuration has been applied because the "docker-env" file was not configured.'; \
-		cp docker-env.dist docker-env; \
+	@if [[ ! -f .env ]]; then \
+		echo 'The default configuration has been applied because the ".env" file was not configured.'; \
+		cp .env.dist .env; \
 	fi
 	$(DOCKER_COMPOSE) up -d --remove-orphans --no-recreate
 

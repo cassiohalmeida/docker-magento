@@ -1,3 +1,5 @@
 /apache/vhosts/*
 !/apache/vhosts/magento.conf
 docker-env
+.env
+database/
