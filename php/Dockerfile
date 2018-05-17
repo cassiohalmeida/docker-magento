@@ -58,6 +58,8 @@ RUN \
 # Install custom PHP configuration
 COPY conf/* /usr/local/etc/php/
 COPY conf/xdebug.ini /usr/local/etc/php/conf.d/
+ARG HOSTIP
+RUN echo "xdebug.remote_host=$HOSTIP" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Install xdebug
 # For PHP 5, the last xdebug supported version is 2.5.5

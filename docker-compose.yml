@@ -30,7 +30,10 @@ services:
     tty: true
 
   php:
-    build: php
+    build:
+        context: ./php
+        args:
+            - HOSTIP=${HOST_IP}
     env_file: .env
     volumes:
       - ${PROJECT_ROOT}:/var/www/html:rw,delegated
